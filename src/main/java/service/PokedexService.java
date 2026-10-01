@@ -50,4 +50,11 @@ public class PokedexService {
     public List<Pokemon> getAll() {
         return List.copyOf(pokedex.values());
     }
+
+    public void resetToSeed() {
+        pokedex.clear();
+        for (Pokemon pokemon : SeedData.createStarterPokemon()) {
+            add(pokemon);
+        }
+    }
 }
