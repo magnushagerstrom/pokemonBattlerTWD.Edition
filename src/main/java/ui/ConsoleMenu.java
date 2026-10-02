@@ -1,5 +1,7 @@
 package ui;
 
+import exception.InvalidPokemonDataException;
+import exception.PokemonNotFoundException;
 import model.Pokemon;
 import service.PokedexService;
 
@@ -13,18 +15,25 @@ public class ConsoleMenu {
     }
 
     public void run() {
-      boolean running = true;
-      while (running) {
-          printMenu();
-          int choice = input.readIntInRange("Choose ",0, 9);
-          switch (choice) {
-              case 1 -> listAll();
-              case 0 -> running = false;
-              default -> System.out.println("Not built yet, coming soon!");
-          }
-      }
-      System.out.println("Goodbye!");
+        boolean running = true;
+        while (running) {
+            printMenu();
+            int choice = input.readIntInRange("Choose: ", 0, 9);
+            try {
+                switch (choice) {
+                    case 1 -> listAll();
+                    case 4 -> deletePokemon();
+                    case 7 -> resetPokedex();
+                    case 0 -> running = false;
+                    default -> System.out.println("Not built yet, coming soon!");
+                }
+            } catch (PokemonNotFoundException | InvalidPokemonDataException e) {
+                System.out.println("ERROR: " + e.getMessage());
+            }
+        }
+        System.out.println("Goodbye!");
     }
+
     private void printMenu() {
         System.out.println();
         System.out.println("===== POKÉMON BATTLER =====");
@@ -50,5 +59,17 @@ public class ConsoleMenu {
             System.out.println("  " + pokemon);
         }
     }
+
+    private void deletePokemon() {
+        String name = input.readText("Name of the Pokemon to delete: ");
+        service.delete(name);
+        System.out.println(name + " Was deleted!");
+    }
+
+    private void resetPokedex() {
+        service.resetToSeed();
+        System.out.println("Pokedex reset with seed data!");
+    }
+
 
 }
