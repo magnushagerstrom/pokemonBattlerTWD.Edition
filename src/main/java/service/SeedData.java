@@ -1,6 +1,7 @@
 package service;
 
 import model.Attack;
+import model.DamageAttack;
 import model.Pokemon;
 import model.Type;
 
@@ -13,12 +14,12 @@ public class SeedData {
     }
 
     public static List<Pokemon> createStarterPokemon() {
-        Attack tackle = new Attack("Tackle", 12, 95, Type.NORMAL);
-        Attack fist = new Attack("Fist", 20, 100, Type.NORMAL);
-        Attack arrow = new Attack("Arrow", 28, 85, Type.FIRE);
-        Attack bluntForce = new Attack("Blunt Force", 20, 100, Type.WATER);
-        Attack knifeWife = new Attack("Knife Wife", 26, 90, Type.WATER);
-        Attack revolver = new Attack("Revolver", 66, 99, Type.FIRE);
+        Attack tackle = new DamageAttack("Tackle", 12, 95, Type.NORMAL);
+        Attack fist = new DamageAttack("Fist", 20, 100, Type.NORMAL);
+        Attack arrow = new DamageAttack("Arrow", 28, 85, Type.FIRE);
+        Attack bluntForce = new DamageAttack("Blunt Force", 20, 100, Type.WATER);
+        Attack knifeWife = new DamageAttack("Knife Wife", 26, 90, Type.WATER);
+        Attack revolver = new DamageAttack("Revolver", 66, 99, Type.FIRE);
         return List.of(
                 new Pokemon("Daryl Dixon", Type.ELECTRIC, 78, List.of(fist, arrow, tackle)),
                 new Pokemon("Maggie Greene", Type.WATER, 88, List.of(bluntForce, knifeWife, tackle)),
