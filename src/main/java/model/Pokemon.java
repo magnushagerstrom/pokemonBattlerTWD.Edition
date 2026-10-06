@@ -64,12 +64,19 @@ public class Pokemon {
 
     public void takeDamage(int amount) {
         if (amount < 0) {
-            throw new InvalidPokemonDataException("Damage amount must be non-negative, was " + amount);
+            throw new IllegalArgumentException("Damage amount must be non-negative, was " + amount);
         }
         currentHp = currentHp - amount;
         if (currentHp < 0) {
             currentHp = 0;
         }
+    }
+
+    public void heal(int amount) {
+        if (amount < 0) {
+            throw new IllegalArgumentException("Heal amount cannot be negative, was " + amount);
+        }
+        currentHp = Math.min(maxHp, currentHp + amount);
     }
 
     public boolean isFainted() {
