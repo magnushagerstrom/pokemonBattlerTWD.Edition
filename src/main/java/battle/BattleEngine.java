@@ -4,6 +4,7 @@ import model.Attack;
 import model.Pokemon;
 import ui.InputHelper;
 
+import java.util.List;
 import java.util.Random;
 
 public class BattleEngine {
@@ -23,4 +24,14 @@ public class BattleEngine {
         }
     }
 
+    public Attack choosePlayerAttack(Pokemon pokemon) {
+        List<Attack> attacks = pokemon.getAttacks();
+        System.out.println("Choose an attack for " + pokemon.getName() + ": ");
+        for (int i = 0; i < attacks.size(); i++) {
+            System.out.println(i + 1 + ". " + attacks.get(i));
+        }
+        int choice = input.readIntInRange("Attack: ", 1, attacks.size());
+        return attacks.get(choice - 1);
+
+    }
 }
