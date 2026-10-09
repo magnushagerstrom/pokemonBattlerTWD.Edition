@@ -40,4 +40,33 @@ public class BattleEngine {
     public Attack chooseCpuAttack(Pokemon pokemon) {
         return cpuStrategy.chooseAttack(pokemon);
     }
+
+    public boolean fight(Pokemon player, Pokemon cpu) {
+        player.restoreHp();
+        cpu.restoreHp();
+        System.out.println(player.getName() + " vs " + cpu.getName() + "!");
+
+        boolean playerTurn = random.nextBoolean();
+        while (!player.isFainted() && !cpu.isFainted()) {
+            if (playerTurn) {
+                Attack attack = choosePlayerAttack(player);
+                useAttack(attack, player, cpu);
+            } else {
+                Attack attack = chooseCpuAttack(cpu);
+                useAttack(attack, cpu, player);
+            }
+            playerTurn = !playerTurn;
+            System.out.println(player + " | " + cpu);
+
+        }
+        boolean playerWon = cpu.isFainted();
+        if (playerWon) {
+            System.out.println("You won! " + player.getName() + " defeated " + cpu.getName() + ".");
+        } else {
+            System.out.println("You lost... " + player.getName() + " was defeated by " + cpu.getName() + ".");
+        }
+        return playerWon;
+
+    }
+
 }
