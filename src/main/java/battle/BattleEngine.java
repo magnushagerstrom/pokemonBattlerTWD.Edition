@@ -10,9 +10,11 @@ import java.util.Random;
 public class BattleEngine {
     private final InputHelper input;
     private final Random random = new Random();
+    private final CpuStrategy cpuStrategy;
 
-    public BattleEngine(InputHelper input) {
+    public BattleEngine(InputHelper input, CpuStrategy cpuStrategy) {
         this.input = input;
+        this.cpuStrategy = cpuStrategy;
     }
 
     public void useAttack(Attack attack, Pokemon attacker, Pokemon defender) {
@@ -33,5 +35,9 @@ public class BattleEngine {
         int choice = input.readIntInRange("Attack: ", 1, attacks.size());
         return attacks.get(choice - 1);
 
+    }
+
+    public Attack chooseCpuAttack(Pokemon pokemon) {
+        return cpuStrategy.chooseAttack(pokemon);
     }
 }
