@@ -1,3 +1,5 @@
+import battle.BattleEngine;
+import battle.RandomStrategy;
 import service.PokedexService;
 import ui.ConsoleMenu;
 import ui.InputHelper;
@@ -8,7 +10,8 @@ public class Main {
         service.resetToSeed();
 
         InputHelper input = new InputHelper();
-        ConsoleMenu menu = new ConsoleMenu(service, input);
+        BattleEngine battleEngine = new BattleEngine(input, new RandomStrategy());
+        ConsoleMenu menu = new ConsoleMenu(service, input, battleEngine);
         menu.run();
     }
 }

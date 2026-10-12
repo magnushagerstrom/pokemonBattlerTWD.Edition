@@ -1,17 +1,23 @@
 package ui;
 
+import battle.BattleEngine;
 import exception.InvalidPokemonDataException;
 import exception.PokemonNotFoundException;
 import model.Pokemon;
 import service.PokedexService;
+import service.SeedData;
+
+import java.util.List;
 
 public class ConsoleMenu {
     private final PokedexService service;
     private final InputHelper input;
+    private final BattleEngine battleEngine;
 
-    public ConsoleMenu(PokedexService service, InputHelper input) {
+    public ConsoleMenu(PokedexService service, InputHelper input, BattleEngine battleEngine) {
         this.service = service;
         this.input = input;
+        this.battleEngine = battleEngine;
     }
 
     public void run() {
@@ -24,6 +30,7 @@ public class ConsoleMenu {
                     case 1 -> listAll();
                     case 4 -> deletePokemon();
                     case 7 -> resetPokedex();
+                    case 8 -> startBattle();
                     case 0 -> running = false;
                     default -> System.out.println("Not built yet, coming soon!");
                 }
@@ -44,8 +51,8 @@ public class ConsoleMenu {
         System.out.println("4. Delete Pokémon");
         System.out.println("5. Save to file");
         System.out.println("6. Load from file");
-        System.out.println("7. Reset to starting Pokémon");
-        System.out.println("8. Start battle");
+        System.out.println("7. Reset to starting Pokémons");
+        System.out.println("8. Pick a fighter & Start battle");
         System.out.println("9. Battle results");
         System.out.println("0. Exit");
     }
@@ -69,6 +76,27 @@ public class ConsoleMenu {
     private void resetPokedex() {
         service.resetToSeed();
         System.out.println("Pokedex reset with seed data!");
+    }
+
+    private void startBattle() {
+        if (service.count() == 0) {
+            System.out.println("The pokedex is empty");
+            return;
+        }
+
+        List<Pokemon> myPokemon = service.getAll();
+        System.out.println("Pick your fighter!");
+        for (int i = 0; i < myPokemon.size(); i++) {
+            System.out.println((i + 1) + ". " + myPokemon.get(i));
+        }
+
+        int choice = input.readIntInRange("Fighter: ", 1, myPokemon.size());
+        Pokemon player = myPokemon.get(choice - 1);
+        Pokemon wild = SeedData.createWildOpponent();
+        System.out.println("Opponent is: " + wild.getName() + ". Fight with honor and glory!");
+
+        battleEngine.fight(player, wild);
+
     }
 
 

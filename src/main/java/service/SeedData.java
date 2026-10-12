@@ -3,6 +3,7 @@ package service;
 import model.*;
 
 import java.util.List;
+import java.util.Random;
 
 public class SeedData {
 
@@ -19,12 +20,19 @@ public class SeedData {
         Attack revolver = new DamageAttack("Revolver", 66, 99, Type.FIRE);
         Attack firstAid = new HealAttack("First Aid", 25, 100);
         return List.of(
-                new Pokemon("Daryl Dixon", Type.ELECTRIC, 78, List.of(fist, arrow, tackle, firstAid)),
-                new Pokemon("Maggie Greene", Type.WATER, 88, List.of(bluntForce, knifeWife, tackle, firstAid)),
-                new Pokemon("Carol Peltier", Type.GRASS, 78, List.of(fist, arrow, tackle, firstAid)),
-                new Pokemon("Michonne", Type.WATER, 88, List.of(bluntForce, knifeWife, tackle, firstAid)),
-                new Pokemon("Rick Grimes", Type.FIRE, 78, List.of(fist, revolver, tackle, firstAid)),
-                new Pokemon("Negan", Type.WATER, 88, List.of(bluntForce, knifeWife, tackle, firstAid))
-        );
+                new Pokemon("Daryl Dixonemon", Type.ELECTRIC, 78, List.of(fist, arrow, tackle, firstAid)),
+                new Pokemon("Maggie Greenemon", Type.WATER, 88, List.of(bluntForce, knifeWife, tackle, firstAid)),
+                new Pokemon("Carol Peltierizard", Type.GRASS, 78, List.of(fist, arrow, tackle, firstAid)),
+                new Pokemon("Michonnemon", Type.WATER, 88, List.of(bluntForce, knifeWife, tackle, firstAid)),
+                new Pokemon("Rickemon Grimes", Type.FIRE, 78, List.of(fist, revolver, tackle, firstAid)),
+                new Pokemon("Neganizard", Type.WATER, 88, List.of(bluntForce, knifeWife, tackle, firstAid)));
     }
+
+    private static final Random random = new Random();
+
+    public static Pokemon createWildOpponent() {
+        List<Pokemon> pool = createStarterPokemon();
+        return pool.get(random.nextInt(pool.size()));
+    }
+
 }
