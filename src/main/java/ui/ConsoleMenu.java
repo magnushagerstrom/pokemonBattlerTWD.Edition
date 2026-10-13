@@ -100,7 +100,7 @@ public class ConsoleMenu {
         System.out.println("Opponent is: " + wild.getName() + ". Fight with honor and glory!");
 
         boolean won = battleEngine.fight(player, wild);
-        stats.recordBattle(won);
+        stats.recordBattle(player.getName(), won);
         player.restoreHp();
     }
 
@@ -117,5 +117,14 @@ public class ConsoleMenu {
         System.out.println("Wins:    " + stats.getWins());
         System.out.println("Losses:  " + stats.getLosses());
         System.out.println("Win rate: " + winRate + "%");
+
+        System.out.println("---Per Pokemon---");
+        for (String name : stats.getUsedPokemonNames()) {
+            int pokemonWins = stats.getWinsFor(name);
+            int pokemonLosses = stats.getLossesFor(name);
+            int pokemonRate = pokemonWins * 100 / (pokemonWins + pokemonLosses);
+            System.out.println(name + ": " + pokemonWins + "W / " + pokemonLosses + "L (" + pokemonRate + "%)");
+
+        }
     }
 }
