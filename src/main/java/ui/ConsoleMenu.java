@@ -96,7 +96,7 @@ public class ConsoleMenu {
         System.out.println("Opponent is: " + wild.getName() + ". Fight with honor and glory!");
 
         battleEngine.fight(player, wild);
-
+        player.restoreHp();
     }
 
 
