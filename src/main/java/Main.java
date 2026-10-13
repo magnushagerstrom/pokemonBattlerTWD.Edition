@@ -1,5 +1,6 @@
 import battle.BattleEngine;
 import battle.RandomStrategy;
+import service.BattleStats;
 import service.PokedexService;
 import ui.ConsoleMenu;
 import ui.InputHelper;
@@ -11,7 +12,8 @@ public class Main {
 
         InputHelper input = new InputHelper();
         BattleEngine battleEngine = new BattleEngine(input, new RandomStrategy());
-        ConsoleMenu menu = new ConsoleMenu(service, input, battleEngine);
+        BattleStats stats = new BattleStats();
+        ConsoleMenu menu = new ConsoleMenu(service, input, battleEngine, stats);
         menu.run();
     }
 }

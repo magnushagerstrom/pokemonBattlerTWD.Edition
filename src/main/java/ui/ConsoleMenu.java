@@ -4,6 +4,7 @@ import battle.BattleEngine;
 import exception.InvalidPokemonDataException;
 import exception.PokemonNotFoundException;
 import model.Pokemon;
+import service.BattleStats;
 import service.PokedexService;
 import service.SeedData;
 
@@ -13,11 +14,13 @@ public class ConsoleMenu {
     private final PokedexService service;
     private final InputHelper input;
     private final BattleEngine battleEngine;
+    private final BattleStats stats;
 
-    public ConsoleMenu(PokedexService service, InputHelper input, BattleEngine battleEngine) {
+    public ConsoleMenu(PokedexService service, InputHelper input, BattleEngine battleEngine, BattleStats stats) {
         this.service = service;
         this.input = input;
         this.battleEngine = battleEngine;
+        this.stats = stats;
     }
 
     public void run() {
@@ -31,6 +34,7 @@ public class ConsoleMenu {
                     case 4 -> deletePokemon();
                     case 7 -> resetPokedex();
                     case 8 -> startBattle();
+                    case 9 -> showResults();
                     case 0 -> running = false;
                     default -> System.out.println("Not built yet, coming soon!");
                 }
@@ -95,9 +99,23 @@ public class ConsoleMenu {
         Pokemon wild = SeedData.createWildOpponent();
         System.out.println("Opponent is: " + wild.getName() + ". Fight with honor and glory!");
 
-        battleEngine.fight(player, wild);
+        boolean won = battleEngine.fight(player, wild);
+        stats.recordBattle(won);
         player.restoreHp();
     }
 
+    private void showResults() {
+        if (stats.getTotalBattles() == 0) {
+            System.out.println("No fight has been fought!\nFor honor and glory start a fight with option 8!");
+            return;
+        }
 
+        int winRate = stats.getWins() * 100 / stats.getTotalBattles();
+
+        System.out.println("===== BATTLE RESULTS =====");
+        System.out.println("Battles: " + stats.getTotalBattles());
+        System.out.println("Wins:    " + stats.getWins());
+        System.out.println("Losses:  " + stats.getLosses());
+        System.out.println("Win rate: " + winRate + "%");
+    }
 }
