@@ -99,6 +99,12 @@ public class ConsoleMenu {
         Pokemon wild = SeedData.createWildOpponent();
         System.out.println("Opponent is: " + wild.getName() + ". Fight with honor and glory!");
 
+        for (int i = 3; i >= 1; i--) {
+            System.out.println(i + "...");
+            pause(1000);
+        }
+        System.out.println("FIGHT!");
+
         boolean won = battleEngine.fight(player, wild);
         stats.recordBattle(player.getName(), won);
         player.restoreHp();
@@ -124,7 +130,14 @@ public class ConsoleMenu {
             int pokemonLosses = stats.getLossesFor(name);
             int pokemonRate = pokemonWins * 100 / (pokemonWins + pokemonLosses);
             System.out.println(name + ": " + pokemonWins + "W / " + pokemonLosses + "L (" + pokemonRate + "%)");
+        }
+    }
 
+    private void pause(int millis) {
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
         }
     }
 }
