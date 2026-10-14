@@ -131,6 +131,9 @@ public class ConsoleMenu {
             int pokemonRate = pokemonWins * 100 / (pokemonWins + pokemonLosses);
             System.out.println(name + ": " + pokemonWins + "W / " + pokemonLosses + "L (" + pokemonRate + "%)");
         }
+
+        System.out.println("Most used Fighter: " + stats.getMostUsedPokemon());
+        System.out.println("Most used Attack: " + stats.getMostUsedAttack());
     }
 
     private void pause(int millis) {

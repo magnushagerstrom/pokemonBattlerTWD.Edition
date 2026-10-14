@@ -11,8 +11,8 @@ public class Main {
         service.resetToSeed();
 
         InputHelper input = new InputHelper();
-        BattleEngine battleEngine = new BattleEngine(input, new RandomStrategy());
         BattleStats stats = new BattleStats();
+        BattleEngine battleEngine = new BattleEngine(input, new RandomStrategy(), stats);
         ConsoleMenu menu = new ConsoleMenu(service, input, battleEngine, stats);
         menu.run();
     }

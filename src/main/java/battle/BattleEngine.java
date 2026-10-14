@@ -3,6 +3,7 @@ package battle;
 import model.Attack;
 import model.Pokemon;
 import ui.InputHelper;
+import service.BattleStats;
 
 import java.util.List;
 import java.util.Random;
@@ -11,11 +12,14 @@ public class BattleEngine {
     private final InputHelper input;
     private final Random random = new Random();
     private final CpuStrategy cpuStrategy;
+    private final BattleStats stats;
 
-    public BattleEngine(InputHelper input, CpuStrategy cpuStrategy) {
+    public BattleEngine(InputHelper input, CpuStrategy cpuStrategy, BattleStats stats) {
         this.input = input;
         this.cpuStrategy = cpuStrategy;
+        this.stats = stats;
     }
+
 
     public void useAttack(Attack attack, Pokemon attacker, Pokemon defender) {
         boolean hit = random.nextInt(100) < attack.getAccuracy();
@@ -50,6 +54,7 @@ public class BattleEngine {
         while (!player.isFainted() && !cpu.isFainted()) {
             if (playerTurn) {
                 Attack attack = choosePlayerAttack(player);
+                stats.recordAttack(attack.getName());
                 useAttack(attack, player, cpu);
             } else {
                 Attack attack = chooseCpuAttack(cpu);
