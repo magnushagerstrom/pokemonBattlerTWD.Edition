@@ -51,10 +51,20 @@ public class PokedexService {
         return List.copyOf(pokedex.values());
     }
 
-    public void resetToSeed() {
-        pokedex.clear();
-        for (Pokemon pokemon : SeedData.createStarterPokemon()) {
-            add(pokemon);
+    public void replaceAll(List<Pokemon> pokemons) {
+        Map<String, Pokemon> fresh = new LinkedHashMap<>();
+        for (Pokemon pokemon : pokemons) {
+            String key = pokemon.getName().toLowerCase();
+            if (fresh.containsKey(key)) {
+                throw new InvalidPokemonDataException("Duplicate Pokémon in data: " + pokemon.getName());
+            }
+            fresh.put(key, pokemon);
         }
+        pokedex.clear();
+        pokedex.putAll(fresh);
+    }
+
+    public void resetToSeed() {
+        replaceAll(SeedData.createStarterPokemon());
     }
 }
