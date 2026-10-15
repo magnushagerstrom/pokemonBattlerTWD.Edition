@@ -4,6 +4,7 @@ import battle.BattleEngine;
 import exception.InvalidPokemonDataException;
 import exception.PokemonNotFoundException;
 import model.Pokemon;
+import repository.PokemonRepository;
 import service.BattleStats;
 import service.PokedexService;
 import service.SeedData;
@@ -15,15 +16,20 @@ public class ConsoleMenu {
     private final InputHelper input;
     private final BattleEngine battleEngine;
     private final BattleStats stats;
+    private final PokemonRepository repository;
 
-    public ConsoleMenu(PokedexService service, InputHelper input, BattleEngine battleEngine, BattleStats stats) {
+
+    public ConsoleMenu(PokedexService service, InputHelper input, BattleEngine battleEngine,
+                       BattleStats stats, PokemonRepository repository) {
         this.service = service;
         this.input = input;
         this.battleEngine = battleEngine;
         this.stats = stats;
+        this.repository = repository;
     }
 
     public void run() {
+        loadOnStartUp();
         boolean running = true;
         while (running) {
             printMenu();
@@ -32,14 +38,20 @@ public class ConsoleMenu {
                 switch (choice) {
                     case 1 -> listAll();
                     case 4 -> deletePokemon();
+                    case 5 -> saveToFile();
+                    case 6 -> loadFromFile();
                     case 7 -> resetPokedex();
                     case 8 -> startBattle();
                     case 9 -> showResults();
-                    case 0 -> running = false;
+                    case 0 -> {
+                        printWithDots("Saving then closing the program", 4);
+                        saveToFile();
+                        running = false;
+                    }
                     default -> System.out.println("Not built yet, coming soon!");
                 }
             } catch (PokemonNotFoundException | InvalidPokemonDataException e) {
-                System.out.println("ERROR: " + e.getMessage());
+                System.out.println("Something went horribly wrong!: " + e.getMessage());
             }
         }
         System.out.println("Goodbye!");
@@ -142,5 +154,48 @@ public class ConsoleMenu {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
+    }
+
+    private void loadOnStartUp() {
+        try {
+            List<Pokemon> loaded = repository.load();
+            if (loaded.isEmpty()) {
+                printWithDots("Ooops, no saved Pokemon found. Loading default Pokedex", 6);
+                service.resetToSeed();
+            } else {
+                service.replaceAll(loaded);
+                printWithDots("Loaded " + loaded.size() + " Pokemons from saved file", 4);
+            }
+        } catch (InvalidPokemonDataException e) {
+            System.out.println("Saved data was invalid (" + e.getMessage() + "). Loading default Pokedex ");
+            service.resetToSeed();
+        }
+    }
+
+    private void saveToFile() {
+        repository.save(service.getAll());
+        printWithDots("Saving", 4);
+        System.out.println("...SUCCESS...");
+    }
+
+    private void loadFromFile() {
+        List<Pokemon> loaded = repository.load();
+        if (loaded.isEmpty()) {
+            System.out.println("Sorry! Nothing to load. Keeping the current Pokedex.");
+            return;
+        }
+
+        service.replaceAll(loaded);
+        printWithDots("Loaded " + loaded.size() + " Pokemon from saved file.", 4);
+    }
+
+
+    private void printWithDots(String message, int dots) {
+        System.out.print(message);
+        for (int i = 0; i < dots; i++) {
+            pause(500);
+            System.out.print(".");
+        }
+        System.out.println();
     }
 }
