@@ -44,8 +44,8 @@ public class ConsoleMenu {
                     case 8 -> startBattle();
                     case 9 -> showResults();
                     case 0 -> {
-                        printWithDots("Saving then closing the program", 4);
                         saveToFile();
+                        System.out.println("Closing the program. See you, survivor!");
                         running = false;
                     }
                     default -> System.out.println("Not built yet, coming soon!");
@@ -173,9 +173,9 @@ public class ConsoleMenu {
     }
 
     private void saveToFile() {
-        repository.save(service.getAll());
         printWithDots("Saving", 4);
-        System.out.println("...SUCCESS...");
+        repository.save(service.getAll());
+    }
     }
 
     private void loadFromFile() {
