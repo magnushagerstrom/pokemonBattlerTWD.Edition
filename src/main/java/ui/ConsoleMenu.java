@@ -1,6 +1,12 @@
 package ui;
 
+import model.Attack;
+import model.DamageAttack;
+import model.HealAttack;
+import model.Type;
+
 import java.util.NoSuchElementException;
+
 import battle.BattleEngine;
 import exception.InvalidPokemonDataException;
 import exception.PokemonNotFoundException;
@@ -12,6 +18,7 @@ import service.PokedexService;
 import service.SeedData;
 
 import java.util.List;
+import java.util.ArrayList;
 
 public class ConsoleMenu {
     private final PokedexService service;
@@ -42,6 +49,7 @@ public class ConsoleMenu {
                 try {
                     switch (choice) {
                         case 1 -> listAll();
+                        case 2 -> addPokemon();
                         case 4 -> deletePokemon();
                         case 5 -> saveToFile();
                         case 6 -> loadFromFile();
@@ -94,11 +102,59 @@ public class ConsoleMenu {
         }
     }
 
+    private void addPokemon() {
+        System.out.println("--- Add a new Pokémon ---");
+        String name = input.readText("Name: ");
+        Type type = readType();
+        int maxHp = input.readIntInRange("Max HP (1-100): ", 1, 100);
+        List<Attack> attacks = readAttacks();
+
+        Pokemon pokemon = new Pokemon(name, type, maxHp, attacks);
+        service.add(pokemon);
+        System.out.println(pokemon.getName() + " joined the Pokédex!");
+    }
+
+    private Type readType() {
+        Type[] types = Type.values();
+        for (int i = 0; i < types.length; i++) {
+            System.out.println((i + 1) + ". " + types[i].getLabel());
+        }
+        int choice = input.readIntInRange("Type: ", 1, types.length);
+        return types[choice - 1];
+    }
+
+    private List<Attack> readAttacks() {
+        int count = input.readIntInRange("Number of attacks (1-4): ", 1, 4);
+        List<Attack> attacks = new ArrayList<>();
+        for (int i = 1; i <= count; i++) {
+            System.out.println("--- Attack " + i + " of " + count + " ---");
+            attacks.add(readAttack());
+        }
+        return attacks;
+    }
+
+    private Attack readAttack() {
+        String name = input.readText("Attack name: ");
+        int kind = input.readIntInRange("1. Damage attack  2. Heal attack: ", 1, 2);
+        int accuracy = input.readIntInRange("Accuracy (1-100): ", 1, 100);
+
+        if (kind == 1) {
+            int baseDamage = input.readIntInRange("Base damage (1-100): ", 1, 100);
+            System.out.println("Attack type:");
+            Type attackType = readType();
+            return new DamageAttack(name, baseDamage, accuracy, attackType);
+        }
+
+        int healAmount = input.readIntInRange("Heal amount (1-100): ", 1, 100);
+        return new HealAttack(name, healAmount, accuracy);
+    }
+
     private void deletePokemon() {
         String name = input.readText("Name of the Pokemon to delete: ");
         service.delete(name);
         System.out.println(name + " Was deleted!");
     }
+
 
     private void resetPokedex() {
         service.resetToSeed();
