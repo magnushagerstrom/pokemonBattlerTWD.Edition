@@ -39,7 +39,7 @@ public class ConsoleMenu {
         try {
             while (running) {
                 printMenu();
-                int choice = input.readIntInRange("Choose: ", 0, 9);
+                int choice = input.readIntInRange("Choose an option 1-9: ", 0, 9);
                 try {
                     switch (choice) {
                         case 1 -> listAll();
@@ -59,7 +59,7 @@ public class ConsoleMenu {
                         default -> System.out.println("Not built yet, coming soon!");
                     }
                 } catch (PokemonNotFoundException | InvalidPokemonDataException e) {
-                    System.out.println("Something went horribly wrong!: " + e.getMessage());
+                    System.out.println("ERROR!: " + e.getMessage());
                 }
             }
         } catch (NoSuchElementException e) {
@@ -85,6 +85,7 @@ public class ConsoleMenu {
         System.out.println("8. Pick a fighter & Start battle");
         System.out.println("9. Battle results");
         System.out.println("0. Exit");
+        System.out.println("================================");
     }
 
     private void listAll() {
@@ -92,6 +93,7 @@ public class ConsoleMenu {
             System.out.println("The pokedex is empty");
             return;
         }
+        printWithDots("Loading", 4);
         for (Pokemon pokemon : service.getAll()) {
             System.out.println("  " + pokemon);
         }

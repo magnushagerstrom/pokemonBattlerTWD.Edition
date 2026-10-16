@@ -48,10 +48,20 @@ public class BattleEngine {
     public boolean fight(Pokemon player, Pokemon cpu) {
         player.restoreHp();
         cpu.restoreHp();
-        System.out.println(player.getName() + " vs " + cpu.getName() + "!");
+        System.out.println("--=* " + player.getName() + " vs " + cpu.getName() + " *=--");
 
         boolean playerTurn = random.nextBoolean();
+        System.out.println("Flipping a coin to decide who goes first...");
+        if (playerTurn) {
+            System.out.println("Heads! " + player.getName() + " goes first.");
+        } else {
+            System.out.println("Tails! " + cpu.getName() + " goes first.");
+        }
+        int turn = 1;
         while (!player.isFainted() && !cpu.isFainted()) {
+            System.out.println();
+            System.out.println("========== Turn " + turn + " ==========");
+
             if (playerTurn) {
                 Attack attack = choosePlayerAttack(player);
                 stats.recordAttack(attack.getName());
@@ -62,8 +72,10 @@ public class BattleEngine {
             }
             playerTurn = !playerTurn;
             System.out.println(player + " | " + cpu);
-
+            turn++;
         }
+        System.out.println();
+        System.out.println("============================");
         boolean playerWon = cpu.isFainted();
         if (playerWon) {
             System.out.println("You won! " + player.getName() + " defeated " + cpu.getName() + ".");
