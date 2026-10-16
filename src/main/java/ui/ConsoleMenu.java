@@ -1,5 +1,6 @@
 package ui;
 
+import java.util.NoSuchElementException;
 import battle.BattleEngine;
 import exception.InvalidPokemonDataException;
 import exception.PokemonNotFoundException;
@@ -34,31 +35,38 @@ public class ConsoleMenu {
     public void run() {
         loadOnStartUp();
         boolean running = true;
-        while (running) {
-            printMenu();
-            int choice = input.readIntInRange("Choose: ", 0, 9);
-            try {
-                switch (choice) {
-                    case 1 -> listAll();
-                    case 4 -> deletePokemon();
-                    case 5 -> saveToFile();
-                    case 6 -> loadFromFile();
-                    case 7 -> resetPokedex();
-                    case 8 -> startBattle();
-                    case 9 -> showResults();
-                    case 0 -> {
-                        saveToFile();
-                        System.out.println("Closing the program. See you, survivor!");
-                        running = false;
+        try {
+            while (running) {
+                printMenu();
+                int choice = input.readIntInRange("Choose: ", 0, 9);
+                try {
+                    switch (choice) {
+                        case 1 -> listAll();
+                        case 4 -> deletePokemon();
+                        case 5 -> saveToFile();
+                        case 6 -> loadFromFile();
+                        case 7 -> resetPokedex();
+                        case 8 -> startBattle();
+                        case 9 -> showResults();
+                        case 0 -> {
+                            saveToFile();
+                            System.out.println("Closing the program. See you, survivor!");
+                            running = false;
+                        }
+                        default -> System.out.println("Not built yet, coming soon!");
                     }
-                    default -> System.out.println("Not built yet, coming soon!");
+                } catch (PokemonNotFoundException | InvalidPokemonDataException e) {
+                    System.out.println("Something went horribly wrong!: " + e.getMessage());
                 }
-            } catch (PokemonNotFoundException | InvalidPokemonDataException e) {
-                System.out.println("Something went horribly wrong!: " + e.getMessage());
             }
+        } catch (NoSuchElementException e) {
+            System.out.println();
+            System.out.println("Input was closed. Saving and exiting...");
+            saveToFile();
         }
         System.out.println("Goodbye!");
     }
+
 
     private void printMenu() {
         System.out.println();
