@@ -1,5 +1,8 @@
 package service;
 
+import exception.InvalidPokemonDataException;
+import repository.StatsData;
+
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -64,6 +67,50 @@ public class BattleStats {
 
     public String getMostUsedPokemon() {
         return findMostUsed(pokemonUses);
+    }
+
+    public StatsData toData() {
+        StatsData data = new StatsData();
+        data.wins = wins;
+        data.losses = losses;
+        data.pokemonUses.putAll(pokemonUses);
+        data.pokemonWins.putAll(pokemonWins);
+        data.pokemonLosses.putAll(pokemonLosses);
+        data.attackUses.putAll(attackUses);
+        return data;
+    }
+
+    public void loadFrom(StatsData data) {
+        if (data == null || data.wins < 0 || data.losses < 0
+                || !isValidCounter(data.pokemonUses)
+                || !isValidCounter(data.pokemonWins)
+                || !isValidCounter(data.pokemonLosses)
+                || !isValidCounter(data.attackUses)) {
+            throw new InvalidPokemonDataException("Saved stats are invalid");
+        }
+        wins = data.wins;
+        losses = data.losses;
+        replaceCounter(pokemonUses, data.pokemonUses);
+        replaceCounter(pokemonWins, data.pokemonWins);
+        replaceCounter(pokemonLosses, data.pokemonLosses);
+        replaceCounter(attackUses, data.attackUses);
+    }
+
+    private boolean isValidCounter(Map<String, Integer> counter) {
+        if (counter == null) {
+            return false;
+        }
+        for (Integer value : counter.values()) {
+            if (value == null || value < 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void replaceCounter(Map<String, Integer> target, Map<String, Integer> source) {
+        target.clear();
+        target.putAll(source);
     }
 
     private String findMostUsed(Map<String, Integer> counter) {

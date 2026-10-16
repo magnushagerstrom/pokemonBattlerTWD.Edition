@@ -176,7 +176,7 @@ public class ConsoleMenu {
         printWithDots("Saving", 4);
         repository.save(service.getAll());
     }
-    }
+
 
     private void loadFromFile() {
         List<Pokemon> loaded = repository.load();
