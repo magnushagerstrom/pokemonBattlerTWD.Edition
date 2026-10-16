@@ -47,6 +47,26 @@ public class PokedexService {
         pokedex.remove(name.trim().toLowerCase());
     }
 
+    public void update(String oldName, Pokemon updated) {
+        if (updated == null) {
+            throw new IllegalArgumentException("Updated Pokemon cannot be null");
+        }
+        Pokemon existing = findByName(oldName);
+        String oldKey = existing.getName().toLowerCase();
+        String newKey = updated.getName().toLowerCase();
+
+        if (newKey.equals(oldKey)) {
+            pokedex.put(oldKey, updated);
+            return;
+        }
+
+        if (pokedex.containsKey(newKey)) {
+            throw new InvalidPokemonDataException("A Pokemon named " + updated.getName() + " already exists");
+        }
+        pokedex.remove(oldKey);
+        pokedex.put(newKey, updated);
+    }
+
     public List<Pokemon> getAll() {
         return List.copyOf(pokedex.values());
     }

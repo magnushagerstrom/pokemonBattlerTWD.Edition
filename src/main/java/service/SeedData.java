@@ -2,6 +2,7 @@ package service;
 
 import model.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -30,8 +31,16 @@ public class SeedData {
 
     private static final Random random = new Random();
 
-    public static Pokemon createWildOpponent() {
-        List<Pokemon> pool = createStarterPokemon();
+    public static Pokemon createWildOpponent(String excludedName) {
+        List<Pokemon> pool = new ArrayList<>();
+        for (Pokemon pokemon : createStarterPokemon()) {
+            if (!pokemon.getName().equalsIgnoreCase(excludedName)) {
+                pool.add(pokemon);
+            }
+        }
+        if (pool.isEmpty()) {
+            pool = createStarterPokemon();
+        }
         return pool.get(random.nextInt(pool.size()));
     }
 

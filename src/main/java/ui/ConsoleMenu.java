@@ -1,24 +1,18 @@
 package ui;
 
-import model.Attack;
-import model.DamageAttack;
-import model.HealAttack;
-import model.Type;
-
-import java.util.NoSuchElementException;
-
 import battle.BattleEngine;
 import exception.InvalidPokemonDataException;
 import exception.PokemonNotFoundException;
-import model.Pokemon;
+import model.*;
 import repository.PokemonRepository;
 import repository.StatsRepository;
 import service.BattleStats;
 import service.PokedexService;
 import service.SeedData;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 public class ConsoleMenu {
     private final PokedexService service;
@@ -50,6 +44,7 @@ public class ConsoleMenu {
                     switch (choice) {
                         case 1 -> listAll();
                         case 2 -> addPokemon();
+                        case 3 -> editPokemon();
                         case 4 -> deletePokemon();
                         case 5 -> saveToFile();
                         case 6 -> loadFromFile();
@@ -114,6 +109,59 @@ public class ConsoleMenu {
         System.out.println(pokemon.getName() + " joined the Pokédex!");
     }
 
+    private void editPokemon() {
+        String oldName = input.readText("Name of the Pokémon to edit: ");
+        Pokemon current = service.findByName(oldName);
+
+        String name = current.getName();
+        Type type = current.getType();
+        int maxHp = current.getMaxHp();
+        List<Attack> attacks = new ArrayList<>(current.getAttacks());
+
+        boolean editing = true;
+        while (editing) {
+            System.out.println();
+            System.out.println("--- Editing " + name + " (" + type.getLabel() + ", HP " + maxHp + ") ---");
+            for (int i = 0; i < attacks.size(); i++) {
+                System.out.println("   Attack " + (i + 1) + ": " + attacks.get(i));
+            }
+            System.out.println("1. Change name");
+            System.out.println("2. Change type");
+            System.out.println("3. Change max HP");
+            System.out.println("4. Add attack");
+            System.out.println("5. Remove attack");
+            System.out.println("0. Save changes and go back");
+
+            int choice = input.readIntInRange("Choose: ", 0, 5);
+            switch (choice) {
+                case 1 -> name = input.readText("New name: ");
+                case 2 -> type = readType();
+                case 3 -> maxHp = input.readIntInRange("New max HP (1-100): ", 1, 100);
+                case 4 -> {
+                    if (attacks.size() >= 4) {
+                        System.out.println("A Pokémon can have at most 4 attacks.");
+                    } else {
+                        attacks.add(readAttack());
+                    }
+                }
+                case 5 -> {
+                    if (attacks.size() <= 1) {
+                        System.out.println("A Pokémon must have at least 1 attack.");
+                    } else {
+                        int index = input.readIntInRange("Attack to remove (1-" + attacks.size() + "): ", 1, attacks.size());
+                        Attack removed = attacks.remove(index - 1);
+                        System.out.println(removed.getName() + " was removed.");
+                    }
+                }
+                case 0 -> editing = false;
+            }
+        }
+
+        Pokemon updated = new Pokemon(name, type, maxHp, attacks);
+        service.update(current.getName(), updated);
+        System.out.println(updated.getName() + " was updated!");
+    }
+
     private Type readType() {
         Type[] types = Type.values();
         for (int i = 0; i < types.length; i++) {
@@ -175,7 +223,7 @@ public class ConsoleMenu {
 
         int choice = input.readIntInRange("Fighter: ", 1, myPokemon.size());
         Pokemon player = myPokemon.get(choice - 1);
-        Pokemon wild = SeedData.createWildOpponent();
+        Pokemon wild = SeedData.createWildOpponent(player.getName());
         System.out.println("Opponent is: " + wild.getName() + ". Fight with honor and glory!");
 
         for (int i = 3; i >= 1; i--) {
