@@ -1,5 +1,4 @@
 # Pokémon Battler – TWD Edition
-I highly suggest to give the mind-map an overview for a birds eye view of the program structure and functionality.
 
 A turn-based Pokémon battle engine for the console, written in Java 21 with Maven.
 The characters are inspired by The Walking Dead (Daryl Dixonemon, Michonnemon, Rickemon Grimes ...).
@@ -46,7 +45,8 @@ is saved to `pokedex.json` and `stats.json` in the project folder.
 8. Pick a fighter & Start battle
 9. Battle results
 0. Exit
-Choose: 8
+================================
+Choose an option 1-9: 8
 Pick your fighter!
 1. Daryl Dixonemon (Electric, HP 78/78)
 2. Maggie Greenemon (Water, HP 88/88)
@@ -77,6 +77,15 @@ Daryl Dixonemon (Electric, HP 78/78) | Carol Peltierizard (Grass, HP 22/78)
 ============================
 You won! Daryl Dixonemon defeated Carol Peltierizard.
 ```
+
+## Architecture
+
+For a bird's-eye view of how the program fits together, see the mind map below.
+`Main.java` sits in the center and creates and connects every part.
+
+![Architecture mind map](docs/architecture.png)
+
+A Swedish version is available in [docs/architecture-sv.png](docs/architecture-sv.png).
 
 ## Project structure
 
@@ -191,7 +200,6 @@ automatically on exit. The save files are listed in `.gitignore`, since the prog
   name already belongs to another Pokémon. An error is then shown and **every** change from that
   edit session is discarded, including valid ones such as a new max HP. The original Pokémon
   stays unchanged.
-
 
 ## Author
 
