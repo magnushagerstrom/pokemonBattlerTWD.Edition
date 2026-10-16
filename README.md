@@ -1,4 +1,5 @@
 # Pokémon Battler – TWD Edition
+I highly suggest to give the mind-map an overview for a birds eye view of the program structure and functionality.
 
 A turn-based Pokémon battle engine for the console, written in Java 21 with Maven.
 The characters are inspired by The Walking Dead (Daryl Dixonemon, Michonnemon, Rickemon Grimes ...).
