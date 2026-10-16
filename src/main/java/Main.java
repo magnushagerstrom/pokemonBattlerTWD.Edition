@@ -1,6 +1,7 @@
 import battle.BattleEngine;
 import battle.RandomStrategy;
 import repository.PokemonRepository;
+import repository.StatsRepository;
 import service.BattleStats;
 import service.PokedexService;
 import ui.ConsoleMenu;
@@ -14,8 +15,9 @@ public class Main {
         BattleStats stats = new BattleStats();
         BattleEngine battleEngine = new BattleEngine(input, new RandomStrategy(), stats);
         PokemonRepository repository = new PokemonRepository(Path.of("pokedex.json"));
+        StatsRepository statsRepository = new StatsRepository(Path.of("stats.json"));
 
-        ConsoleMenu menu = new ConsoleMenu(service, input, battleEngine, stats, repository);
+        ConsoleMenu menu = new ConsoleMenu(service, input, battleEngine, stats, repository, statsRepository);
         menu.run();
     }
 }

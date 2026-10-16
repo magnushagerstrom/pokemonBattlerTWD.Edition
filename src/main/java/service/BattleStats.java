@@ -86,7 +86,7 @@ public class BattleStats {
                 || !isValidCounter(data.pokemonWins)
                 || !isValidCounter(data.pokemonLosses)
                 || !isValidCounter(data.attackUses)) {
-            throw new InvalidPokemonDataException("Saved stats are invalid");
+            throw new InvalidPokemonDataException("Saved stats are invalid, loading default seed data");
         }
         wins = data.wins;
         losses = data.losses;

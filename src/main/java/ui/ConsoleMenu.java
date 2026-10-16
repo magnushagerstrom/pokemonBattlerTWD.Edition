@@ -5,6 +5,7 @@ import exception.InvalidPokemonDataException;
 import exception.PokemonNotFoundException;
 import model.Pokemon;
 import repository.PokemonRepository;
+import repository.StatsRepository;
 import service.BattleStats;
 import service.PokedexService;
 import service.SeedData;
@@ -17,15 +18,17 @@ public class ConsoleMenu {
     private final BattleEngine battleEngine;
     private final BattleStats stats;
     private final PokemonRepository repository;
+    private final StatsRepository statsRepository;
 
 
     public ConsoleMenu(PokedexService service, InputHelper input, BattleEngine battleEngine,
-                       BattleStats stats, PokemonRepository repository) {
+                       BattleStats stats, PokemonRepository repository, StatsRepository statsRepository) {
         this.service = service;
         this.input = input;
         this.battleEngine = battleEngine;
         this.stats = stats;
         this.repository = repository;
+        this.statsRepository = statsRepository;
     }
 
     public void run() {
@@ -157,6 +160,7 @@ public class ConsoleMenu {
     }
 
     private void loadOnStartUp() {
+        statsRepository.loadInto(stats);
         try {
             List<Pokemon> loaded = repository.load();
             if (loaded.isEmpty()) {
@@ -175,6 +179,8 @@ public class ConsoleMenu {
     private void saveToFile() {
         printWithDots("Saving", 4);
         repository.save(service.getAll());
+        statsRepository.save(stats);
+
     }
 
 
