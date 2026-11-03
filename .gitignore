@@ -41,3 +41,5 @@ build/
 ### Save files (created by the program) ###
 pokedex.json
 stats.json
+### Hemligheter (lösenord m.m.) ###
+.env
