@@ -7,6 +7,8 @@ import service.PokedexService;
 import ui.ConsoleMenu;
 import ui.InputHelper;
 import java.nio.file.Path;
+import repository.PokemonDao;
+import repository.PokemonDaoJdbc;
 
 public class Main {
     public static void main(String[] args) {
@@ -17,7 +19,9 @@ public class Main {
         PokemonRepository repository = new PokemonRepository(Path.of("pokedex.json"));
         StatsRepository statsRepository = new StatsRepository(Path.of("stats.json"));
 
-        ConsoleMenu menu = new ConsoleMenu(service, input, battleEngine, stats, repository, statsRepository);
+        PokemonDao pokemonDao = new PokemonDaoJdbc();
+
+        ConsoleMenu menu = new ConsoleMenu(service, input, battleEngine, stats, repository, statsRepository, pokemonDao);
         menu.run();
     }
 }

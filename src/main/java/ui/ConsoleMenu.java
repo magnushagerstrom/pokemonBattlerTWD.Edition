@@ -4,6 +4,7 @@ import battle.BattleEngine;
 import exception.InvalidPokemonDataException;
 import exception.PokemonNotFoundException;
 import model.*;
+import repository.PokemonDao;
 import repository.PokemonRepository;
 import repository.StatsRepository;
 import service.BattleStats;
@@ -20,17 +21,19 @@ public class ConsoleMenu {
     private final BattleEngine battleEngine;
     private final BattleStats stats;
     private final PokemonRepository repository;
+    private final PokemonDao pokemonDao;
     private final StatsRepository statsRepository;
 
 
     public ConsoleMenu(PokedexService service, InputHelper input, BattleEngine battleEngine,
-                       BattleStats stats, PokemonRepository repository, StatsRepository statsRepository) {
+                       BattleStats stats, PokemonRepository repository, StatsRepository statsRepository, PokemonDao pokemonDao) {
         this.service = service;
         this.input = input;
         this.battleEngine = battleEngine;
         this.stats = stats;
         this.repository = repository;
         this.statsRepository = statsRepository;
+        this.pokemonDao = pokemonDao;
     }
 
     public void run() {
@@ -276,16 +279,19 @@ public class ConsoleMenu {
     private void loadOnStartUp() {
         statsRepository.loadInto(stats);
         try {
-            List<Pokemon> loaded = repository.load();
+            List<Pokemon> loaded = pokemonDao.findAll();
             if (loaded.isEmpty()) {
-                printWithDots("Ooops, no saved Pokemon found. Loading default Pokedex", 6);
+                printWithDots("Ooops, no Pokémon found in the database. Loading default Pokedex", 6);
                 service.resetToSeed();
             } else {
                 service.replaceAll(loaded);
-                printWithDots("Loaded " + loaded.size() + " Pokemons from saved file", 4);
+                printWithDots("Loaded " + loaded.size() + " Pokémon from the database", 4);
             }
         } catch (InvalidPokemonDataException e) {
-            System.out.println("Saved data was invalid (" + e.getMessage() + "). Loading default Pokedex ");
+            System.out.println("Saved data was invalid (" + e.getMessage() + "). Loading default Pokedex");
+            service.resetToSeed();
+        } catch (RuntimeException e) {
+            System.out.println("Could not reach the database (" + e.getMessage() + "). Loading default Pokedex");
             service.resetToSeed();
         }
     }
