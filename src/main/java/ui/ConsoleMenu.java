@@ -111,7 +111,17 @@ public class ConsoleMenu {
 
         Pokemon pokemon = new Pokemon(name, type, maxHp, attacks);
         service.add(pokemon);
-        System.out.println(pokemon.getName() + " joined the Pokédex!");
+
+        try {
+            pokemonDao.save(pokemon);
+            System.out.println(pokemon.getName() + " joined the Pokédex!");
+        } catch (RuntimeException e) {
+            service.delete(pokemon.getName());
+            System.out.println("ERROR!: " + e.getMessage());
+            if (e.getCause() != null) {
+                System.out.println("Reason: " + e.getCause().getMessage());
+            }
+        }
     }
 
     private void editPokemon() {

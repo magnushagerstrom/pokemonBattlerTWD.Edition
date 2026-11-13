@@ -7,4 +7,8 @@ import java.util.List;
 public interface PokemonDao {
 
     List<Pokemon> findAll();
+
+    void save(Pokemon pokemon);
+
+
 }

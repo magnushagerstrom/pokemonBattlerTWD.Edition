@@ -10,6 +10,9 @@ public abstract class Attack {
         if (name == null || name.isBlank()) {
             throw new InvalidPokemonDataException("Attack name cannot be null or empty");
         }
+        if (name.trim().length() > 50) {
+            throw new InvalidPokemonDataException("Attack name can be at most 50 characters");
+        }
         if (accuracy < 1 || accuracy > 100) {
             throw new InvalidPokemonDataException("Accuracy must be between 1 and 100, was " + accuracy);
         }

@@ -16,6 +16,9 @@ public class Pokemon {
         if (name == null || name.isBlank()) {
             throw new InvalidPokemonDataException("Name cannot be null or empty");
         }
+        if (name.trim().length() > 50) {
+            throw new InvalidPokemonDataException("Name can be at most 50 characters");
+        }
         if (type == null) {
             throw new InvalidPokemonDataException("Type cannot be null");
         }
